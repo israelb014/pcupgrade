@@ -5983,7 +5983,7 @@ function Register-QDUiEvent {
     $UI.ChkSimulate.Add_Unchecked({ $UI.SimBadge.Visibility = [System.Windows.Visibility]::Collapsed; Invoke-QDSafe { Build-QDRunSummary } })
     $UI.BtnRun.Add_Click({ Invoke-QDSafe { Invoke-QDRunStart } })
     $UI.BtnCancel.Add_Click({ Invoke-QDSafe { Invoke-QDRunCancel } })
-    $UI.BtnOpenReport.Add_Click({ Invoke-QDSafe { if ($Sync.ReportPath -and (Test-Path -LiteralPath $Sync.ReportPath)) { Start-Process -FilePath $Sync.ReportPath } } })
+    $UI.BtnOpenReport.Add_Click({ Invoke-QDSafe { if ($Sync.ReportPath -and (Test-Path -LiteralPath $Sync.ReportPath)) { Invoke-Item -LiteralPath $Sync.ReportPath } } })
     $UI.BtnReboot.Add_Click({ Invoke-QDSafe { Invoke-QDRebootPrompt } })
     $UI.BtnOpenLogs.Add_Click({ Invoke-QDSafe { Start-Process -FilePath 'explorer.exe' -ArgumentList ('"{0}"' -f $QD.LogsDir) } })
 }
