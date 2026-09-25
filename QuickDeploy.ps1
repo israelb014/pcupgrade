@@ -502,7 +502,7 @@ function Test-QDComputerName {
     if ($Name.Length -gt 15) { return 'שם המחשב ארוך מ-15 תווים' }
     if ($Name -notmatch '^[A-Za-z0-9-]+$') { return 'מותרים רק אותיות באנגלית, ספרות ומקף' }
     if ($Name -match '^[0-9]+$') { return 'השם אינו יכול להכיל ספרות בלבד' }
-    if ($Name.StartsWith('-') -or $Name.EndsWith('-')) { return 'השם אינו יכול להתחיל או להסתיים במקף' }
+    if ($Name -match '^-|-$') { return 'השם אינו יכול להתחיל או להסתיים במקף' }
     return ''
 }
 
@@ -749,7 +749,8 @@ function Save-QDProfileFile {
     $clean = ConvertTo-QDProfile -InputObject $ProfileData
     if ([string]::IsNullOrWhiteSpace($Path)) { $Path = Get-QDProfileFileName -Name $clean.name }
     $json = ConvertTo-QDProfileJson -ProfileData $clean
-    [System.IO.File]::WriteAllText($Path, $json, (New-Object System.Text.UTF8Encoding($true)))
+    # UTF-8 without BOM — identical output on Windows PowerShell 5.1 and PowerShell 7
+    [System.IO.File]::WriteAllText($Path, $json, (New-Object System.Text.UTF8Encoding $false))
     return $Path
 }
 
@@ -2586,7 +2587,7 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:24px}
     [void]$sb.Append(('<footer>QuickDeploy {0} · יומן: <span class="ltr">{1}</span></footer>' -f $QD.Version, (ConvertTo-QDHtml $Sync.LogPath)))
     [void]$sb.Append('</div></body></html>')
 
-    [System.IO.File]::WriteAllText($Path, $sb.ToString(), (New-Object System.Text.UTF8Encoding($true)))
+    [System.IO.File]::WriteAllText($Path, $sb.ToString(), (New-Object System.Text.UTF8Encoding $false))
     return $Path
 }
 
